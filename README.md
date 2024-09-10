@@ -14,7 +14,7 @@
   -- 자격증명 설정
   aws configure
 
-  -- 작격증명 확인
+  -- 자격증명 확인
   aws configure list
   ```
 
