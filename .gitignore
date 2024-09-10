@@ -1,0 +1,4 @@
+node_modules/
+.aws-sam/
+package-lock.json
+.samignore
