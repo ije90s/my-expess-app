@@ -4,20 +4,32 @@ Resources:
   ExpressApiFunction:
     Type: AWS::Serverless::Function
     Properties:
+      CodeUri: ./src/
       Handler: lambda.handler
       Runtime: nodejs20.x
-      CodeUri: .
       MemorySize: 128
       Timeout: 10
       Architectures:
         - arm64
+      Layers:
+        - !Ref NodeModulesLayer # 레이어를 참조하여 연결
       Events:
         ApiEvent:
           Type: HttpApi
           Properties:
-            ApiId: !Ref MyHttpApi # HTTP API를 명시적으로 참조
-            Path: /{proxy+} # 모든 경로를 Lambda로 전달합니다.
-            Method: ANY # 모든 HTTP 메서드를 허용합니다.
+            ApiId: !Ref MyHttpApi
+            Path: /{proxy+}
+            Method: ANY
+
+  NodeModulesLayer: # 레이어 정의
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: NodeModulesLayer
+      Description: "Layer containing node_modules"
+      ContentUri: ./layer/node_modules/ # 레이어에 포함할 파일 경로
+      CompatibleRuntimes:
+        - nodejs20.x
+      LicenseInfo: "MIT"
 
   MyHttpApi:
     Type: AWS::Serverless::HttpApi
